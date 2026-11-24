@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block c %}
+<p><a href="{{url_for('leads')}}">← Voltar aos leads</a></p>
+<h1>{{l.name}} <span class="mut">{{l.phone}}</span></h1>
+<div class="card"><p class="mut">Chegou em {{l.entered_at.strftime('%d/%m/%Y %H:%M')}} via {{l.source}}
+{% if l.exited_at %} · Saiu em {{l.exited_at.strftime('%d/%m/%Y')}}{% if l.exit_reason %} ({{l.exit_reason}}){% endif %}{% else %} · Em acompanhamento{% endif %}</p>
+<form class="row" method="post" action="{{url_for('lead_etapa',id=l.id)}}"><select name="stage">{% for k,v in stages.items() %}<option value="{{k}}" {{'selected' if k==l.stage}}>{{v}}</option>{% endfor %}</select>
+<input name="reason" placeholder="Motivo (se encerrar)"><button>Mudar etapa</button></form></div>
+<div class="grid"><div>
+<div class="card"><h2>Conversa</h2><div class="chat">{% for m in l.messages %}<div class="b {{m.direction}}">{{m.body}}<small>{{m.created_at.strftime('%d/%m %H:%M')}}</small></div>{% else %}<p class="mut">Sem mensagens ainda.</p>{% endfor %}</div>
+<form class="row" method="post" action="{{url_for('lead_enviar',id=l.id)}}"><textarea name="body" rows="2" placeholder="Escreva uma mensagem" required></textarea><button>Enviar</button></form></div>
+<div class="card"><h2>Notas</h2><form method="post" action="{{url_for('lead_notas',id=l.id)}}"><textarea style="width:100%" name="notes" rows="3">{{l.notes}}</textarea><br><br><button>Salvar notas</button></form></div>
+</div><div>
+<div class="card"><h2>Registrar venda</h2><form style="display:grid;gap:8px" method="post" action="{{url_for('venda_nova',id=l.id)}}">
+<input name="amount" placeholder="Valor (R$)" required><input name="sold_at" type="date" value="{{today}}" required><input name="description" placeholder="Procedimento / descrição">
+<select name="classification">{% for p in pos %}<option>{{p}}</option>{% endfor %}</select><button>Salvar venda</button></form>
+{% for s in l.sales %}<hr><b>R$ {{'%.2f'|format(s.amount)}}</b> · {{s.sold_at.strftime('%d/%m/%Y')}}<br><span class="mut">{{s.description}} — {{s.classification}}</span>{% endfor %}</div>
+<div class="card"><h2>Jornada do paciente</h2><ul class="tl">{% for e in l.events %}<li>{{e.text}}<br><small class="mut">{{e.created_at.strftime('%d/%m/%Y %H:%M')}} · {{e.by}}</small></li>{% endfor %}</ul></div>
+</div></div>{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block c %}
+<h1>Central de leads</h1>
+<div class="card row">
+<form class="row grow" method="get"><input class="grow" name="q" value="{{q}}" placeholder="Buscar por nome ou telefone"><button>Buscar</button></form>
+<form class="row" method="post" action="{{url_for('lead_novo')}}"><input name="name" placeholder="Nome"><input name="phone" placeholder="Telefone com DDD" required><button>Adicionar lead</button></form>
+</div>
+<div class="board">{% for k,label in stages.items() %}<div class="col"><h2>{{label}} <span>{{cols[k]|length}}</span></h2>
+{% for l in cols[k] %}<a class="lead" href="{{url_for('lead',id=l.id)}}"><b>{{l.name}}</b><br><small>{{l.phone}} · desde {{l.entered_at.strftime('%d/%m')}}</small></a>
+{% else %}<p class="mut">Nenhum lead nesta etapa.</p>{% endfor %}</div>{% endfor %}</div>{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block c %}
+<h1>Campanhas</h1>
+<div class="card"><h2>Nova campanha</h2><form class="row" method="post">
+<input class="grow" name="name" placeholder="Nome da campanha" required>
+<input class="grow" name="template_name" placeholder="Nome do template aprovado no WhatsApp" required>
+<select name="target_stage">{% for k,v in stages.items() %}<option value="{{k}}">Enviar para: {{v}}</option>{% endfor %}</select><button>Criar campanha</button></form></div>
+<div class="card"><table><tr><th>Campanha</th><th>Template</th><th>Público</th><th>Enviadas</th><th>Último disparo</th><th></th></tr>
+{% for c in camps %}<tr><td>{{c.name}}</td><td>{{c.template_name}}</td><td>{{stages[c.target_stage]}}</td><td>{{c.sent_count}}</td><td>{{c.last_run.strftime('%d/%m %H:%M') if c.last_run else '—'}}</td>
+<td><form method="post" action="{{url_for('campanha_disparar',id=c.id)}}" onsubmit="return confirm('Disparar para todos desta etapa?')"><button>Disparar</button></form></td></tr>
+{% else %}<tr><td colspan="6" class="mut">Nenhuma campanha criada ainda.</td></tr>{% endfor %}</table></div>{% endblock %}

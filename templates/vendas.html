@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block c %}
+<h1>Vendas e pós-venda</h1><p class="mut">{{sales|length}} venda(s) · Total R$ {{'%.2f'|format(total)}}</p>
+<div class="card"><table><tr><th>Data</th><th>Paciente</th><th>Valor</th><th>Descrição</th><th>Pós-venda</th></tr>
+{% for s in sales %}<tr><td>{{s.sold_at.strftime('%d/%m/%Y')}}</td><td><a href="{{url_for('lead',id=s.lead.id)}}">{{s.lead.name}}</a></td><td>R$ {{'%.2f'|format(s.amount)}}</td><td>{{s.description}}</td>
+<td><form class="row" method="post" action="{{url_for('venda_classificar',id=s.id)}}"><select name="classification">{% for p in pos %}<option {{'selected' if p==s.classification}}>{{p}}</option>{% endfor %}</select><button>Salvar</button></form></td></tr>
+{% else %}<tr><td colspan="5" class="mut">Nenhuma venda registrada. Registre a primeira na página de um lead.</td></tr>{% endfor %}</table></div>{% endblock %}

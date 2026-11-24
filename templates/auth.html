@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block c %}<div class="card auth">
+<h1>{{ 'Criar conta' if mode=='cadastro' else 'Entrar' }}</h1>
+<form method="post">
+{% if mode=='cadastro' %}<input name="name" placeholder="Nome" required>{% endif %}
+<input name="email" type="email" placeholder="E-mail" required>
+<input name="password" type="password" placeholder="Senha (mín. 8 caracteres)" required>
+{% if mode=='cadastro' and need_code %}<input name="code" placeholder="Código de convite" required>{% endif %}
+<button>{{ 'Criar conta' if mode=='cadastro' else 'Entrar' }}</button></form>
+<p class="mut">{% if mode=='cadastro' %}Já tem conta? <a href="{{url_for('entrar')}}">Entrar</a>{% else %}Primeira vez? <a href="{{url_for('cadastro')}}">Criar conta</a>{% endif %}</p>
+</div>{% endblock %}
